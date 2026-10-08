@@ -18,5 +18,5 @@ async function AuthenticatedContent({ children }) {
     return <CampusAppShell profile={profile} isEventManager={isEventManager === true}>{children}</CampusAppShell>;
 }
 export default function ProtectedLayout({ children }) {
-    return <Suspense fallback={<main className="grid min-h-screen place-items-center text-sm text-[#697681]">Checking your session...</main>}><AuthenticatedContent>{children}</AuthenticatedContent></Suspense>;
+    return <Suspense fallback={<main id="main-content" className="grid min-h-screen place-items-center text-sm text-[#5e6a74]">Checking your session...</main>}><AuthenticatedContent>{children}</AuthenticatedContent></Suspense>;
 }

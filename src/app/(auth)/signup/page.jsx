@@ -12,4 +12,4 @@ async function SignupContent() {
     }
     return <AuthForm mode="signup" configured={isSupabaseConfigured()}/>;
 }
-export default function SignupPage() { return <Suspense fallback={<p className="text-sm text-[#697681]">Loading sign-up...</p>}><SignupContent /></Suspense>; }
+export default function SignupPage() { return <Suspense fallback={<p className="text-sm text-[#5e6a74]">Loading sign-up...</p>}><SignupContent /></Suspense>; }

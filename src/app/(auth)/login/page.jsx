@@ -18,4 +18,4 @@ async function LoginContent({ searchParams }) {
             : "";
     return <AuthForm mode="login" configured={isSupabaseConfigured()} initialError={initialError} initialSuccess={params.confirmed === "1" ? "Your email is confirmed. You can now sign in." : ""}/>;
 }
-export default function LoginPage(props) { return <Suspense fallback={<p className="text-sm text-[#697681]">Loading sign-in...</p>}><LoginContent {...props}/></Suspense>; }
+export default function LoginPage(props) { return <Suspense fallback={<p className="text-sm text-[#5e6a74]">Loading sign-in...</p>}><LoginContent {...props}/></Suspense>; }

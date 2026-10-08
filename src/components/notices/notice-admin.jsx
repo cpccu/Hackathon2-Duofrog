@@ -205,7 +205,7 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
     return <div className="mx-auto max-w-5xl px-4 py-8 sm:px-7">
         <a href="/dashboard" className="text-xs text-[#c8102e]">Campus Pulse</a>
         <h1 className="mt-4 text-3xl font-semibold text-[#202a35]">Manage notices</h1>
-        <p className="mt-2 text-sm text-[#697681]">Create, update, and remove official campus notices.</p>
+        <p className="mt-2 text-sm text-[#5e6a74]">Create, update, and remove official campus notices.</p>
         {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
         {message && <p role="status" className="mt-4 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900">{message}</p>}
         {!attachmentsReady && <p role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">Notice files are disabled until you apply <code>20261008080000_notice_attachments.sql</code> in Supabase.</p>}
@@ -229,9 +229,9 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
                 </li>)}</ul>
             </fieldset>}
 
-            <label className="block text-xs">Attachments <span className="text-[#79838c]">(up to {NOTICE_ATTACHMENT_MAX_COUNT} files, 20 MB each)</span>
-                <span className="mt-1 flex min-h-12 items-center gap-2 rounded-lg border border-dashed border-[#d8d5d1] bg-[#fcfbfa] px-3 text-sm text-[#697681]"><Upload size={16} className="shrink-0 text-[#a13e4c]" /><input disabled={busy || !attachmentsReady} type="file" name="attachments" multiple accept=".pdf,.docx,.pptx,.xlsx,.txt,.jpg,.jpeg,.png,.webp" className="min-w-0 flex-1 text-xs file:mr-3 file:rounded-md file:border-0 file:bg-[#f9eff0] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#a50e26] disabled:opacity-50" /></span>
-                <span className="mt-1 block text-[10px] text-[#79838c]">PDF, DOCX, PPTX, XLSX, TXT, JPG, PNG, or WEBP</span>
+            <label className="block text-xs">Attachments <span className="text-[#5e6a74]">(up to {NOTICE_ATTACHMENT_MAX_COUNT} files, 20 MB each)</span>
+                <span className="mt-1 flex min-h-12 items-center gap-2 rounded-lg border border-dashed border-[#d8d5d1] bg-[#fcfbfa] px-3 text-sm text-[#5e6a74]"><Upload size={16} className="shrink-0 text-[#a13e4c]" /><input disabled={busy || !attachmentsReady} type="file" name="attachments" multiple accept=".pdf,.docx,.pptx,.xlsx,.txt,.jpg,.jpeg,.png,.webp" className="min-w-0 flex-1 text-xs file:mr-3 file:rounded-md file:border-0 file:bg-[#f9eff0] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#a50e26] disabled:opacity-50" /></span>
+                <span className="mt-1 block text-[11px] text-[#5e6a74]">PDF, DOCX, PPTX, XLSX, TXT, JPG, PNG, or WEBP</span>
             </label>
             <label className="flex items-center gap-2 text-xs"><input type="checkbox" name="is_published" defaultChecked={editing ? editing.is_published : true} />Published</label>
             <div className="flex flex-wrap gap-2"><button disabled={busy} className="min-h-10 rounded-lg bg-[#c8102e] px-4 text-sm font-semibold text-white disabled:opacity-50">{busy ? "Saving…" : editing ? "Save changes" : "Publish notice"}</button>{editing && <button type="button" disabled={busy} onClick={() => setEditing(null)} className="min-h-10 rounded-lg border px-4 text-sm disabled:opacity-50">Cancel edit</button>}</div>
@@ -239,10 +239,10 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
 
         <h2 className="mt-8 text-lg font-semibold">All notices</h2>
         <ul className="mt-3 space-y-2">{notices.map((notice) => <li key={notice.id} className="flex flex-wrap items-center gap-3 rounded-xl border bg-white p-4">
-            <div className="min-w-0 flex-1"><b className="block truncate text-sm">{notice.title}</b><span className="text-xs text-[#75808a]">{notice.category} · {notice.priority} · {notice.is_published ? "Published" : "Draft"}</span>{notice.attachments?.length > 0 && <span className="mt-1 flex items-center gap-1 text-[10px] text-[#697681]"><FileText size={12} />{notice.attachments.length} attachment{notice.attachments.length === 1 ? "" : "s"}</span>}</div>
+            <div className="min-w-0 flex-1"><b className="block truncate text-sm">{notice.title}</b><span className="text-xs text-[#5e6a74]">{notice.category} · {notice.priority} · {notice.is_published ? "Published" : "Draft"}</span>{notice.attachments?.length > 0 && <span className="mt-1 flex items-center gap-1 text-[11px] text-[#5e6a74]"><FileText size={12} />{notice.attachments.length} attachment{notice.attachments.length === 1 ? "" : "s"}</span>}</div>
             <button type="button" disabled={busy} onClick={() => { setEditing(notice); setMessage(""); setError(""); }} className="text-xs font-semibold text-[#c8102e] disabled:opacity-50">Edit</button>
             <button type="button" disabled={busy} onClick={() => remove(notice)} className="text-xs font-semibold text-red-700 disabled:opacity-50">Delete</button>
         </li>)}</ul>
-        {!notices.length && <p className="mt-3 rounded-xl border border-dashed p-6 text-sm text-[#697681]">No notices have been created.</p>}
+        {!notices.length && <p className="mt-3 rounded-xl border border-dashed p-6 text-sm text-[#5e6a74]">No notices have been created.</p>}
     </div>;
 }
