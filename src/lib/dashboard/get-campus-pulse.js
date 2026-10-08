@@ -23,9 +23,20 @@ function campusDate() {
     }).format(new Date());
 }
 
+function campusDateInDays(days) {
+    const date = new Date(`${campusDate()}T12:00:00+06:00`);
+    date.setDate(date.getDate() + days);
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Dhaka",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(date);
+}
+
 export async function getCampusPulseData() {
     const { supabase, userId } = await requireAuthenticatedUser();
-    const [profileResult, eventsResult, resourcesResult, noticesResult] = await Promise.all([
+    const [profileResult, eventsResult, plannerEventsResult, resourcesResult, noticesResult] = await Promise.all([
         supabase
             .from("profiles")
             .select("id,full_name,student_id,department,role,created_at")
@@ -39,11 +50,19 @@ export async function getCampusPulseData() {
             date_to: null,
             result_limit: 6,
         }),
+        supabase.rpc("search_events", {
+            search_query: "",
+            club_filter: null,
+            type_filter: "",
+            date_from: campusDate(),
+            date_to: campusDateInDays(30),
+            result_limit: 100,
+        }),
         supabase
             .from("resources")
             .select("*")
             .order("created_at", { ascending: false })
-            .limit(6),
+            .limit(24),
         supabase
             .from("notices")
             .select("*")
@@ -55,6 +74,7 @@ export async function getCampusPulseData() {
         profile: profileResult.data,
         profileError: profileResult.error,
         events: resolveModule(eventsResult),
+        plannerEvents: resolveModule(plannerEventsResult),
         resources: resolveModule(resourcesResult),
         notices: resolveModule(noticesResult),
     };

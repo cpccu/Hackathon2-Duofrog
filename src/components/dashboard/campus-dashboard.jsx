@@ -17,6 +17,7 @@ import {
     Search,
     UsersRound,
 } from "lucide-react";
+import { CampusDayBrief } from "@/components/dashboard/campus-day-brief";
 
 const quickLinks = [
     { title: "Resource Hub", detail: "Course notes and learning materials", icon: BookOpen, href: "#resources", source: "resources" },
@@ -133,7 +134,7 @@ function EventList({ module, search }) {
 }
 
 function ResourceList({ module, search }) {
-    const visibleResources = module.items.filter((resource) => [resource.title, resource.description, resource.course, resource.department, resource.category].join(" ").toLowerCase().includes(search.toLowerCase()));
+    const visibleResources = module.items.filter((resource) => [resource.title, resource.description, resource.course, resource.department, resource.category].join(" ").toLowerCase().includes(search.toLowerCase())).slice(0, 6);
     return (
         <>
             {module.status !== "ready" || module.items.length === 0 ? <ModuleState module={module} title="Resources" icon={BookOpen} emptyMessage="Newly shared course materials will appear here when available." /> : visibleResources.length === 0 ? <p className="rounded-2xl border border-dashed border-[#deded9] bg-white p-5 text-sm text-[#5e6a74]">No recent resources match “{search}”.</p> : (
@@ -176,7 +177,7 @@ function ServiceCard({ id, title, detail, icon: Icon, sourceStatus = "not-connec
     return <article id={id} className="scroll-mt-24 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#ded4d2]"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-[#f6f4ef] text-[#c8102e]"><Icon size={17} aria-hidden="true" /></span><h3 className="text-xs font-semibold text-[#303a43]">{title}</h3></div><p className="mt-3 text-[11px] leading-relaxed text-[#5e6a74]">{detail}</p><span className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#5e6a74]"><span className={`size-1.5 rounded-full ${sourceStatus === "available" ? "bg-emerald-500" : "bg-[#b7b9b4]"}`} />{statusLabel || (sourceStatus === "available" ? "Available" : "Not connected yet")}</span></article>;
 }
 
-export function CampusDashboard({ profile, events, resources, notices }) {
+export function CampusDashboard({ profile, events, plannerEvents, resources, notices, today }) {
     const [search, setSearch] = useState("");
     const greetingName = fullName(profile).trim().split(/\s+/)[0];
     const todayLabel = useMemo(() => new Intl.DateTimeFormat("en", { weekday: "long", month: "long", day: "numeric", timeZone: "Asia/Dhaka" }).format(new Date()), []);
@@ -192,6 +193,8 @@ export function CampusDashboard({ profile, events, resources, notices }) {
                             <div className="rounded-2xl border border-white/15 bg-white/10 p-4"><p className="text-[11px] font-semibold uppercase tracking-[.14em] text-white">Quick campus search</p><form action="/search" className="mt-3 flex gap-2"><SearchInput value={search} onChange={setSearch} className="min-w-0 flex-1 border-white/70" /><button className="rounded-lg bg-white px-3 text-[11px] font-semibold text-[#c8102e]">Search all</button></form><p className="mt-2 text-[11px] leading-relaxed text-white">Search across events, clubs, resources, notices, FAQs, and Lost &amp; Found.</p></div>
                         </div>
                     </section>
+
+                    <CampusDayBrief events={plannerEvents} resources={resources} notices={notices} profile={profile} today={today} />
 
                     <section id="events" className="mt-9 scroll-mt-24">
                         <SectionHeading eyebrow="Your day" title="Today's & upcoming events" action={<Link href="/events" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#c8102e]">View events <ChevronRight size={14} /></Link>} />

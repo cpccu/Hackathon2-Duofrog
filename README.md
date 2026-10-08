@@ -18,9 +18,15 @@ CampusOS includes four end-to-end campus modules:
 
 The app also includes searchable official notices with private file attachments and an administrator area for campus content and user-role management.
 
+## A more useful start to the campus day
+
+The dashboard's **Your Campus Day** brief connects information that normally lives in separate places. Choose a day to see your event RSVPs in time order, get a warning when two of your registered events overlap, and open the event, venue, or organizer details. The same brief highlights the highest-priority published notice and study materials ranked against your department and planned event topics. Every item links to its source page in CampusOS, so students can verify details and take the next step.
+
+This uses the student's own event-registration status and current campus records; it does not invent schedules or depend on an external AI service. It is designed for a practical City University scenario: a student checks one screen before leaving home to see what they committed to, whether two events conflict, and which campus update or course material deserves attention.
+
 ## A day at City University
 
-A first-year student can use CampusOS to find verified central clubs published by the Directorate of Students’ Welfare, then use one searchable workspace for events, course materials, university guidance, and student support rather than checking separate social groups, chat threads, forms, and notice boards. Before an exam, they can search the Resource Hub for course notes or past papers. If a class or campus service update is added as a notice, it is searchable alongside helpdesk guidance; the Notices page also links directly to City University’s live notice board so students can verify the latest deadlines. A student who loses an ID card can post its location and date, then check the same board for a match.
+A first-year student can use CampusOS to find verified central clubs published by the Directorate of Students’ Welfare, then use one searchable workspace for events, course materials, university guidance, and student support rather than checking separate social groups, chat threads, forms, and notice boards. The Campus Day brief pulls the student’s RSVP schedule, priority official notice, and department-relevant study materials into one place, and warns about overlapping registered events. Before an exam, they can search the Resource Hub for course notes or past papers. If a class or campus service update is added as a notice, it is searchable alongside helpdesk guidance; the Notices page also links directly to City University’s live notice board so students can verify the latest deadlines. A student who loses an ID card can post its location and date, then check the same board for a match.
 
 ## City University sources and data freshness
 

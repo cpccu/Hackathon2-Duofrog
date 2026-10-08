@@ -24,8 +24,10 @@ export default async function DashboardPage() {
         <CampusDashboard
             profile={data.profile}
             events={data.events}
+            plannerEvents={data.plannerEvents}
             resources={data.resources}
             notices={data.notices}
+            today={new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dhaka", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())}
         />
     );
 }
