@@ -42,14 +42,14 @@ Requirements: Node.js 24.x and npm.
    npm install
    ```
 
-2. Copy `.env.example` to `.env.local` and set the public Supabase project URL and publishable key:
+2. Copy `.env.example` to `.env.local`. The example includes the judging project's browser-safe Supabase URL and publishable key:
 
    ```dotenv
    NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
    ```
 
-   Legacy projects may use `NEXT_PUBLIC_SUPABASE_ANON_KEY` instead. Never put a Supabase secret or service-role key in a browser variable or commit it to Git.
+   The publishable key is designed for browser use and is also used by the live application. Never put a Supabase secret or service-role key in a browser variable or commit one to Git. `.env.local` is ignored by Git; `.env.example` contains only the public settings needed to connect.
 
 3. Apply the SQL files in `supabase/migrations/` to your Supabase project in timestamp order. For a fresh project, use the Supabase SQL Editor and stop if a migration reports an error before proceeding. The migrations create profiles, resources, clubs and events, event registration and QR check-in, the helpdesk, notices, Lost & Found, complaints, and administrator functions and policies.
 4. In Supabase Auth, set the Site URL to the deployed app URL. Add the local and production callback URLs ending in `/auth/callback` to the allowed redirect URLs. Configure email confirmation to match the sign-up flow you want to demo.
