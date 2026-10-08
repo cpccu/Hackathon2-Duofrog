@@ -103,10 +103,10 @@ function SearchInput({ value, onChange, className = "" }) {
     );
 }
 
-function SectionHeading({ eyebrow, title, action }) {
+function SectionHeading({ eyebrow, title, action, titleClassName = "" }) {
     return (
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.16em] text-[#5e6a74]">{eyebrow}</p><h2 className="text-base font-semibold tracking-tight text-[#202a35] sm:text-lg">{title}</h2></div>
+            <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.16em] text-[#5e6a74]">{eyebrow}</p><h2 className={`text-base font-semibold tracking-tight text-[#202a35] sm:text-lg ${titleClassName}`}>{title}</h2></div>
             {action}
         </div>
     );
@@ -207,14 +207,14 @@ export function CampusDashboard({ profile, events, plannerEvents, resources, not
                     </section>
 
                     <section id="quick-access" className="mt-10 scroll-mt-24">
-                        <SectionHeading eyebrow="Your shortcuts" title="Quick Access" />
+                        <SectionHeading eyebrow="Your shortcuts" title="Quick Access" titleClassName="font-sans" />
                         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                             {quickLinks.map(({ title, detail, icon: Icon, href, source }) => { const available = source === "search" ? [events, resources, notices].some((module) => module.status === "ready") : ["helpdesk", "student-service"].includes(source) ? true : source ? ({ events, resources }[source]?.status === "ready") : false; return <a key={title} href={href} className="group flex min-h-24 items-start gap-3 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#e7c4c9] hover:bg-[#fffdfc]"><span className="rounded-xl bg-[#f7f3f0] p-2.5 text-[#c8102e]"><Icon size={18} aria-hidden="true" /></span><span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-2"><b className="text-xs text-[#303a43]">{title}</b>{!available && <small className="rounded-full bg-[#f3f1ed] px-2 py-0.5 text-[9px] text-[#5e6a74]">Not connected</small>}</span><small className="mt-1 block text-[11px] leading-relaxed text-[#5e6a74]">{detail}</small></span><ArrowUpRight size={15} className="mt-1 text-[#5e6a74] transition-colors group-hover:text-[#c8102e]" aria-hidden="true" /></a>; })}
                         </div>
                     </section>
 
                     <section id="campus-services" className="mt-10 scroll-mt-24">
-                        <SectionHeading eyebrow="Campus life" title="Support Services" />
+                        <SectionHeading eyebrow="Campus life" title="Support Services" titleClassName="font-sans" />
                         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                             <ServiceCard id="lost-found" title="Lost & Found" detail="Create a post, search items, and mark your post resolved." icon={Search} sourceStatus="available" statusLabel="Student service available" />
                             <ServiceCard id="complaint-box" title="Complaint Box" detail="Submit a complaint privately and track its status." icon={LifeBuoy} sourceStatus="available" statusLabel="Private student support" />
