@@ -42,18 +42,19 @@ Requirements: Node.js 24.x and npm.
    npm install
    ```
 
-2. Copy `.env.example` to `.env.local`. The example includes the judging project's browser-safe Supabase URL and publishable key:
+2. Copy `.env.example` to `.env.local` and fill in your Supabase project URL and publishable key:
 
    ```dotenv
    NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
    ```
 
-   The publishable key is designed for browser use and is also used by the live application. Never put a Supabase secret or service-role key in a browser variable or commit one to Git. `.env.local` is ignored by Git; `.env.example` contains only the public settings needed to connect.
+   The publishable key is designed for browser use. Never put a Supabase secret or service-role key in a browser variable or commit one to Git. `.env.local` is ignored by Git; `.env.example` contains placeholders only.
 
 3. Apply the SQL files in `supabase/migrations/` to your Supabase project in timestamp order. For a fresh project, use the Supabase SQL Editor and stop if a migration reports an error before proceeding. The migrations create profiles, resources, clubs and events, event registration and QR check-in, the helpdesk, notices, Lost & Found, complaints, and administrator functions and policies.
 4. In Supabase Auth, set the Site URL to the deployed app URL. Add the local and production callback URLs ending in `/auth/callback` to the allowed redirect URLs. Configure email confirmation to match the sign-up flow you want to demo.
-5. Start the app:
+5. To enable **Continue with Google**, create a Web OAuth client in Google Cloud Console. Add the production app URL and `http://localhost:3000` as authorized JavaScript origins. Add `https://brdirpmkyrkaqguiyabj.supabase.co/auth/v1/callback` as an authorized redirect URI in Google. In Supabase Dashboard, open **Authentication → Sign In / Providers → Google**, enable Google, and enter the OAuth client ID and secret. In Supabase **Authentication → URL Configuration**, allow `https://hackathon2-duofrog-ochre.vercel.app/auth/callback` and `http://localhost:3000/auth/callback` as redirect URLs. Keep the Google client secret in Supabase provider settings; it does not belong in `.env.local`, Vercel environment variables, or this repository.
+6. Start the app:
 
    ```bash
    npm run dev

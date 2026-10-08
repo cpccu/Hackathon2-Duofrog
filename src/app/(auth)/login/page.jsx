@@ -11,6 +11,11 @@ async function LoginContent({ searchParams }) {
         if (data?.claims?.sub)
             redirect("/dashboard");
     }
-    return <AuthForm mode="login" configured={isSupabaseConfigured()} initialError={params.error === "confirmation" ? "That confirmation link is invalid or expired. Request a new sign-up link." : ""} initialSuccess={params.confirmed === "1" ? "Your email is confirmed. You can now sign in." : ""}/>;
+    const initialError = params.error === "confirmation"
+        ? "That confirmation link is invalid or expired. Request a new sign-up link."
+        : params.error === "oauth"
+            ? "Google sign-in was cancelled or could not be completed. Please try again."
+            : "";
+    return <AuthForm mode="login" configured={isSupabaseConfigured()} initialError={initialError} initialSuccess={params.confirmed === "1" ? "Your email is confirmed. You can now sign in." : ""}/>;
 }
 export default function LoginPage(props) { return <Suspense fallback={<p className="text-sm text-[#697681]">Loading sign-in...</p>}><LoginContent {...props}/></Suspense>; }
