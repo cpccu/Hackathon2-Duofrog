@@ -18,6 +18,10 @@ CampusOS includes four end-to-end campus modules:
 
 The app also includes searchable official notices with private file attachments and an administrator area for campus content and user-role management.
 
+## Production checks
+
+GitHub Actions runs `npm ci`, ESLint, and a production Next.js build for pull requests into `master` and pushes to `master`. The build uses placeholder Supabase public configuration so CI needs no project keys; Vercel supplies the real public configuration to production builds. The Supabase migration history is committed in `supabase/migrations/` and is applied to the production project.
+
 ## A more useful start to the campus day
 
 The dashboard's **Your Campus Day** brief connects information that normally lives in separate places. Choose a day to see your event RSVPs in time order, get a warning when two of your registered events overlap, and open the event, venue, or organizer details. The same brief highlights the highest-priority published notice and study materials ranked against your department and planned event topics. Every item links to its source page in CampusOS, so students can verify details and take the next step.
