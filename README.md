@@ -27,7 +27,8 @@ A first-year student can use CampusOS to find verified central clubs published b
 - The Club Directory shows the six central clubs named by the [Directorate of Students’ Welfare](https://www.cityuniversity.ac.bd/dsw). This verified list links to the university page for committee details.
 - The Notices page links to the [official university notice board](https://www.cityuniversity.ac.bd/all-notice), where current academic calendars and announcements are published. CampusOS does not claim its curated notice list is a complete or real-time mirror.
 - Helpdesk answers link to their official university sources. For transport, the published guidance avoids inventing route stops and times that City University does not provide on its source page.
-- Club profiles and event listings used to demonstrate CampusOS search, RSVP, and check-in workflows are sample data, not confirmed university organizations or scheduled events. The interface labels those records accordingly; students should verify real event dates through official university channels.
+- Six DSW-listed central clubs are represented as sourced directory records; their cards link back to the university page. Other club profiles and event listings may be student or organizer submissions and are not independently verified. Only the original CampusOS demo events are marked **Sample**; students should confirm schedules with organizers and official university channels.
+- Notices sourced from the official university notice board include a direct source link. The published helpdesk also covers the official theory-course mark breakdown, incomplete grades, make-up exams, and retake policy, with reminders to check current course and department instructions.
 
 ## Technology
 
@@ -83,7 +84,7 @@ Set the same public URL and key in Vercel's Development, Preview, and Production
 
 New sign-ups receive the student role from a database trigger. The signup form cannot grant administrator access. Promote an administrator only through a trusted Supabase database operator session after verifying the profile ID. To enable club event management, assign a club's `manager_id` to an existing profile through a trusted operator session. Uploaded resources and official notice attachments are managed by administrators; Lost & Found posts are available to authenticated students.
 
-The Club & Event Engine migration adds starter club and event records only when the club directory is empty. Helpdesk guidance is seeded with source links. There are no shared demo accounts; judges can create their own account on the live app.
+The Club & Event Engine migration adds starter club and event records only when the club directory is empty. The follow-up verified-content migration adds DSW central clubs idempotently, labels only known original demo event fixtures as samples, and adds source-linked university guidance and notices. Student submissions are not replaced. There are no shared demo accounts; judges can create their own account on the live app.
 
 ## Commands
 

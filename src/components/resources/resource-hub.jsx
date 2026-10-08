@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowDown, ArrowUpRight, BookOpen, ChevronLeft, ChevronRight, FileText, Search, UploadCloud } from "lucide-react";
+import { ArrowDown, ArrowUpRight, BookOpen, ChevronLeft, ChevronRight, ExternalLink, FileText, Search, UploadCloud } from "lucide-react";
 import { RESOURCE_CATEGORIES } from "@/lib/resources/constants";
 
 function dateLabel(value) {
@@ -66,6 +66,8 @@ export function ResourceHub({ resources, totalCount, search, department, course,
             {seeded && <p role="status" className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">Original demo files were uploaded to secure storage and published.</p>}
             {queryError && <div role="alert" className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">{queryError}</div>}
             {optionsError && <p role="status" className="mb-4 text-xs text-amber-800">{optionsError} Existing search and category filters remain available.</p>}
+
+            <section aria-labelledby="official-learning-links" className="mb-5 rounded-2xl border border-[#e9e9e5] bg-white p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#a13e4c]">University resources</p><h2 id="official-learning-links" className="mt-1 text-base font-semibold text-[#202a35]">Official study links</h2><p className="mt-1 text-xs text-[#697681]">Open the university’s e-library and examination policy. Uploaded course files below remain student-shared materials.</p></div></div><div className="mt-4 flex flex-wrap gap-2"><a href="https://library.cityuniversity.ac.bd/" target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#e5e3de] px-3 text-xs font-semibold text-[#4d5861] hover:border-[#c8102e]">City University e-library <ExternalLink size={14}/></a><a href="https://www.cityuniversity.ac.bd/exams-result-policy" target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#e5e3de] px-3 text-xs font-semibold text-[#4d5861] hover:border-[#c8102e]">Exams & result policy <ExternalLink size={14}/></a></div></section>
 
             <form action="/resources" method="get" className="rounded-2xl border border-[#e9e9e5] bg-white p-4 sm:p-5">
                 <div className="flex flex-col gap-2 sm:flex-row"><label className="flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-xl border border-[#e2e0da] px-3.5 focus-within:border-[#a54756] focus-within:ring-2 focus-within:ring-[#c8102e]/10"><Search size={17} className="shrink-0 text-[#8a9297]" aria-hidden="true" /><span className="sr-only">Search title, description, or course</span><input name="q" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, description, or course" maxLength={120} className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#92999e]" /></label><button type="submit" className="min-h-11 shrink-0 rounded-xl bg-[#c8102e] px-5 text-xs font-semibold text-white transition-colors hover:bg-[#a50e26]">Search resources</button></div>
