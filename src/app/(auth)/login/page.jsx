@@ -1,9 +1,11 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/auth/auth-form";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 async function LoginContent({ searchParams }) {
+    await connection();
     const params = await searchParams;
     if (isSupabaseConfigured()) {
         const supabase = await createClient();

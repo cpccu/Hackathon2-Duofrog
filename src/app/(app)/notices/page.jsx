@@ -1,7 +1,9 @@
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { NoticesList } from "@/components/notices/notices-list";
 export const metadata = { title: "Notices · CampusOS" };
 export default async function NoticesPage({searchParams}) {
+  await connection();
   const params=await searchParams; const query=typeof params?.q==="string"?params.q.trim().slice(0,120):""; const category=typeof params?.category==="string"?params.category:"";
   const supabase=await createClient();
   const {data,error}=await supabase.rpc("search_notices",{search_query:query,category_filter:category,result_limit:100});

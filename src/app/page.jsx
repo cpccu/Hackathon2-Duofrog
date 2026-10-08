@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
@@ -7,6 +8,8 @@ import { ArrowRight, Bell, BookOpen, CalendarDays, CircleHelp, MapPin, Search, S
 import { CityUniversityBrand } from "@/components/brand/city-university-brand";
 
 async function RedirectIfSignedIn() {
+    // Supabase validates token expiry against the request-time clock.
+    await connection();
     if (isSupabaseConfigured()) {
         const supabase = await createClient();
         const { data } = await supabase.auth.getClaims();

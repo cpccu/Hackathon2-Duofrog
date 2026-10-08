@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { Download, ExternalLink, Paperclip } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -9,6 +10,7 @@ function formatFileSize(bytes) {
 }
 
 export default async function NoticeDetailPage({params}) {
+  await connection();
   const {id}=await params;
   const supabase=await createClient();
   const {data,error}=await supabase.from("notices").select("id,title,category,description,priority,published_date,source_url").eq("id",id).eq("is_published",true).maybeSingle();

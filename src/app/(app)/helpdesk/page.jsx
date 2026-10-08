@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { HelpdeskPage } from "@/components/helpdesk/helpdesk-page";
 
 export const metadata = { title: "Helpdesk · CampusOS" };
 
 export default async function HelpdeskRoute({ searchParams }) {
+  await connection();
   const params = await searchParams;
   const query = typeof params?.q === "string" ? params.q.trim().slice(0, 120) : "";
   const selectedCategory = typeof params?.category === "string" ? params.category : "";
