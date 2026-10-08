@@ -10,8 +10,6 @@ export async function proxy(request) {
         destination = "/login?next=" + encodeURIComponent(pathname + request.nextUrl.search);
     else if (authRoute && authenticated)
         destination = "/dashboard";
-    else if (pathname === "/")
-        destination = authenticated ? "/dashboard" : "/login";
     if (!destination)
         return response;
     const redirectResponse = NextResponse.redirect(new URL(destination, request.url));
