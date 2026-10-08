@@ -11,11 +11,13 @@ Responsive student workspace for City University in Dhaka, built with Next.js Ap
 3. Apply supabase/migrations/20261007000000_create_profiles.sql in the Supabase SQL editor.
 4. Apply supabase/migrations/20261007010000_create_resource_hub.sql to create the private resource bucket, resource table, search RPCs, and RLS policies.
 5. Apply supabase/migrations/20261007020000_create_club_event_engine.sql to create clubs, events, registrations, indexes, organizer RPCs, and RLS policies. It inserts four original demo clubs and five events only when the club directory is empty; they are real Supabase rows, not client-side fixtures.
+5a. Apply supabase/migrations/20261008090000_allow_club_deletion.sql to allow club deletion; its events and their RSVP/check-in records are deleted with the club.
 6. Apply supabase/migrations/20261007030000_secure_event_qr_checkin.sql to add unique private RSVP tokens, student QR retrieval, organizer-validated check-in, and attendance fields. Apply it after the Club & Event Engine migration.
 7. Apply supabase/migrations/20261007040000_create_helpdesk.sql to create published helpdesk articles, transport information, search functions, and RLS policies. The migration seeds a small set of source-linked City University guidance records; transport timings remain unspecified where the official page does not publish them.
-8. Add `OPENROUTER_API_KEY` to `.env.local` to enable CampusAI (server-side only). `OPENROUTER_MODEL` is optional and defaults to `openai/gpt-4o-mini`.
-9. Apply supabase/migrations/20261007050000_create_notices_lost_found_complaints.sql for official notices, Lost & Found posts/photos, private complaints, and RLS policies.
-10. Apply supabase/migrations/20261007060000_admin_dashboard.sql for admin-only statistics, admin profile visibility, and safe user-role updates.
+7a. Apply supabase/migrations/20261008100000_drop_helpdesk_context_search.sql to remove the unused legacy Helpdesk context search function.
+8. Apply supabase/migrations/20261007050000_create_notices_lost_found_complaints.sql for official notices, Lost & Found posts/photos, private complaints, and RLS policies.
+9. Apply supabase/migrations/20261007060000_admin_dashboard.sql for admin-only statistics, admin profile visibility, and safe user-role updates.
+10. Apply supabase/migrations/20261008080000_notice_attachments.sql to create private notice attachments storage and its access policies.
 11. In Supabase Auth, configure the site URL and email confirmation/redirect settings for your local and deployed app. Promote administrators only through a trusted database operator session; assign a club's `manager_id` to an existing profile from the SQL editor to authorize that organizer.
 12. Run npm run dev.
 
@@ -37,7 +39,7 @@ Users can sign up, confirm email when required by project settings, sign in, kee
 - src/app - App Router routes, layouts, and global styles
 - src/components/auth - sign-up/sign-in forms and sign-out control
 - src/components/dashboard - campus workspace
-- src/components/helpdesk - database-backed Helpdesk and CampusAI interface
+- src/components/helpdesk - database-backed campus helpdesk information
 - src/components/notices, src/components/lost-found, and src/components/complaints - campus notices and student support flows
 - src/components/admin - database-backed administrator overview and management tools
 - src/components/events and src/components/clubs - event, RSVP, organizer, and club UI

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BookOpenText, BusFront, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { HelpdeskPage } from "@/components/helpdesk/helpdesk-page";
 
@@ -26,8 +25,8 @@ export default async function HelpdeskRoute({ searchParams }) {
     articles = data || [];
     routes = routeData || [];
   } catch (cause) {
-    error = cause?.code === "42P01" || cause?.code === "PGRST202"
-      ? "Helpdesk database setup is incomplete. Apply the CampusOS Helpdesk migration, then reload this page."
+    error = ["42P01", "PGRST202", "PGRST205"].includes(cause?.code)
+      ? "Helpdesk database setup is incomplete. Ask a campus administrator to apply the existing Helpdesk migration, then reload this page."
       : "Campus help information could not be loaded. Please try again shortly.";
   }
 

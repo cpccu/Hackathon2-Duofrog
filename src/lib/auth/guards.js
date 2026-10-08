@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 export async function requireAuthenticatedUser(nextPath = "/dashboard") {
+    // Session validation is request-specific and Supabase checks JWT expiry against the current time.
+    await connection();
     if (!isSupabaseConfigured())
         redirect("/login?error=configuration");
     const supabase = await createClient();

@@ -15,7 +15,6 @@ import {
     LifeBuoy,
     MapPin,
     Search,
-    Sparkles,
     UsersRound,
 } from "lucide-react";
 
@@ -24,7 +23,7 @@ const quickLinks = [
     { title: "Events", detail: "What's happening around campus", icon: CalendarDays, href: "/events", source: "events" },
     { title: "My Events", detail: "Your event registrations", icon: CheckCircle2, href: "/my-events", source: "events" },
     { title: "Club directory", detail: "Explore City University clubs", icon: UsersRound, href: "/clubs", source: "events" },
-    { title: "CampusAI · Helpdesk", detail: "University information and transport guidance", icon: Sparkles, href: "/helpdesk", source: "helpdesk" },
+    { title: "Campus Helpdesk", detail: "University information and transport guidance", icon: CircleHelp, href: "/helpdesk", source: "helpdesk" },
     { title: "Lost & Found", detail: "Post or find campus items", icon: Search, href: "/lost-found", source: "student-service" },
     { title: "Complaint Box", detail: "Submit and privately track a complaint", icon: LifeBuoy, href: "/complaints", source: "student-service" },
     { title: "Search campus", detail: "Search across connected campus information", icon: Search, href: "/search", source: "search" },
@@ -52,7 +51,7 @@ function ModuleState({ module, title, icon: Icon, emptyMessage }) {
     if (module.status === "not-connected") {
         return (
             <div className="flex min-h-36 items-start gap-4 rounded-2xl border border-dashed border-[#deded9] bg-white p-5">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f5f1ef] text-[#762c3a]"><Icon size={19} aria-hidden="true" /></span>
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f9eff0] text-[#c8102e]"><Icon size={19} aria-hidden="true" /></span>
                 <div>
                     <h3 className="text-sm font-semibold">{title} isn&apos;t connected yet</h3>
                     <p className="mt-2 max-w-lg text-xs leading-relaxed text-[#7c858d]">This section will show campus updates when its City University data source is available.</p>
@@ -67,7 +66,7 @@ function ModuleState({ module, title, icon: Icon, emptyMessage }) {
             <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
                 <h3 className="text-sm font-semibold text-amber-950">{title} couldn&apos;t load</h3>
                 <p className="mt-2 text-xs leading-relaxed text-amber-900">The campus data source is temporarily unavailable. Reload the dashboard to try again.</p>
-                <a href="/dashboard" className="mt-3 inline-flex text-xs font-semibold text-[#762c3a] underline underline-offset-4">Reload dashboard</a>
+                <a href="/dashboard" className="mt-3 inline-flex text-xs font-semibold text-[#c8102e] underline underline-offset-4">Reload dashboard</a>
             </div>
         );
     }
@@ -75,7 +74,7 @@ function ModuleState({ module, title, icon: Icon, emptyMessage }) {
     if (!module.items.length) {
         return (
             <div className="flex min-h-36 items-start gap-4 rounded-2xl border border-dashed border-[#deded9] bg-white p-5">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f5f1ef] text-[#762c3a]"><Icon size={19} aria-hidden="true" /></span>
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f9eff0] text-[#c8102e]"><Icon size={19} aria-hidden="true" /></span>
                 <div><h3 className="text-sm font-semibold">Nothing posted yet</h3><p className="mt-2 max-w-lg text-xs leading-relaxed text-[#7c858d]">{emptyMessage}</p></div>
             </div>
         );
@@ -86,7 +85,7 @@ function ModuleState({ module, title, icon: Icon, emptyMessage }) {
 
 function SearchInput({ value, onChange, className = "" }) {
     return (
-        <label className={`flex min-h-11 items-center gap-2.5 rounded-xl border border-[#e5e3de] bg-white px-3.5 text-[#78828b] focus-within:border-[#9c6871] focus-within:ring-2 focus-within:ring-[#762c3a]/10 ${className}`}>
+        <label className={`flex min-h-11 items-center gap-2.5 rounded-xl border border-[#e5e3de] bg-white px-3.5 text-[#78828b] focus-within:border-[#a54756] focus-within:ring-2 focus-within:ring-[#c8102e]/10 ${className}`}>
             <Search size={17} aria-hidden="true" />
             <span className="sr-only">Search campus events, resources, and notices</span>
             <input
@@ -106,7 +105,7 @@ function SearchInput({ value, onChange, className = "" }) {
 function SectionHeading({ eyebrow, title, action }) {
     return (
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div><p className="mb-1 text-[10px] font-bold uppercase tracking-[.16em] text-[#8a9297]">{eyebrow}</p><h2 className="text-lg font-semibold tracking-tight text-[#202a35]">{title}</h2></div>
+            <div><p className="mb-1 text-[10px] font-bold uppercase tracking-[.16em] text-[#8a9297]">{eyebrow}</p><h2 className="text-base font-semibold tracking-tight text-[#202a35] sm:text-lg">{title}</h2></div>
             {action}
         </div>
     );
@@ -123,8 +122,8 @@ function EventList({ module, search }) {
                 <ul className="divide-y divide-[#efeee9] rounded-2xl border border-[#e9e9e5] bg-white px-5">
                     {visibleEvents.map((event) => (
                         <li key={event.id} className="flex gap-4 py-4 first:pt-5 last:pb-5">
-                            <div className="grid size-12 shrink-0 content-center justify-items-center rounded-xl bg-[#f7f1f1] text-center text-[#762c3a]"><span className="text-[9px] font-bold uppercase">{readableDate(getValue(event, "date", "event_date", "starts_at"), { month: "short" }).split(" ")[0]}</span><span className="text-lg font-semibold leading-5">{readableDate(getValue(event, "date", "event_date", "starts_at"), { day: "numeric" })}</span></div>
-                            <div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><h3 className="text-sm font-semibold text-[#26313a]"><Link href={event.id ? `/events/${event.id}` : "/events"} className="hover:text-[#762c3a]">{event.title || "Campus event"}</Link></h3>{getValue(event, "event_type", "category") && <span className="rounded-full bg-[#f4f2ee] px-2.5 py-1 text-[10px] text-[#6e7880]">{getValue(event, "event_type", "category")}</span>}</div><p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#77818a]">{getValue(event, "short_description", "description") || "Details will be shared by the event organizer."}</p><p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#8a9297]">{getValue(event, "time", "start_time") && <span>{getValue(event, "time", "start_time")}</span>}{getValue(event, "venue", "location") && <span>{getValue(event, "venue", "location")}</span>}<span>{getValue(event, "club_name", "organizer")}</span></p></div>
+                            <div className="grid size-12 shrink-0 content-center justify-items-center rounded-xl bg-[#f8ecee] text-center text-[#c8102e]"><span className="text-[9px] font-bold uppercase">{readableDate(getValue(event, "date", "event_date", "starts_at"), { month: "short" }).split(" ")[0]}</span><span className="text-lg font-semibold leading-5">{readableDate(getValue(event, "date", "event_date", "starts_at"), { day: "numeric" })}</span></div>
+                            <div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><h3 className="text-sm font-semibold text-[#26313a]"><Link href={event.id ? `/events/${event.id}` : "/events"} className="hover:text-[#c8102e]">{event.title || "Campus event"}</Link></h3>{getValue(event, "event_type", "category") && <span className="rounded-full bg-[#f4f2ee] px-2.5 py-1 text-[10px] text-[#6e7880]">{getValue(event, "event_type", "category")}</span>}</div><p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#77818a]">{getValue(event, "short_description", "description") || "Details will be shared by the event organizer."}</p><p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#8a9297]">{getValue(event, "time", "start_time") && <span>{getValue(event, "time", "start_time")}</span>}{getValue(event, "venue", "location") && <span>{getValue(event, "venue", "location")}</span>}<span>{getValue(event, "club_name", "organizer")}</span></p></div>
                         </li>
                     ))}
                 </ul>
@@ -142,8 +141,8 @@ function ResourceList({ module, search }) {
                     {visibleResources.map((resource) => (
                         <li key={resource.id} className="flex items-start gap-3 rounded-2xl border border-[#e9e9e5] bg-white p-4">
                             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f6f4ef] text-[#7c642f]"><FileText size={18} aria-hidden="true" /></span>
-                            <div className="min-w-0 flex-1"><h3 className="text-sm font-semibold text-[#26313a]"><Link href={resource.id ? `/resources/${resource.id}` : "/resources"} className="rounded-sm hover:text-[#762c3a] hover:underline">{resource.title || "Course resource"}</Link></h3><p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#77818a]">{getValue(resource, "description") || [getValue(resource, "course"), getValue(resource, "department")].filter(Boolean).join(" · ") || "Shared learning material"}</p><p className="mt-2 text-[10px] text-[#92999e]">{getValue(resource, "category")}{getValue(resource, "created_at", "createdAt") ? ` · Added ${readableDate(getValue(resource, "created_at", "createdAt"), { month: "short", day: "numeric" })}` : ""}</p></div>
-                            <ArrowUpRight size={16} className="mt-1 shrink-0 text-[#9a7379]" aria-hidden="true" />
+                            <div className="min-w-0 flex-1"><h3 className="text-sm font-semibold text-[#26313a]"><Link href={resource.id ? `/resources/${resource.id}` : "/resources"} className="rounded-sm hover:text-[#c8102e] hover:underline">{resource.title || "Course resource"}</Link></h3><p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#77818a]">{getValue(resource, "description") || [getValue(resource, "course"), getValue(resource, "department")].filter(Boolean).join(" · ") || "Shared learning material"}</p><p className="mt-2 text-[10px] text-[#92999e]">{getValue(resource, "category")}{getValue(resource, "created_at", "createdAt") ? ` · Added ${readableDate(getValue(resource, "created_at", "createdAt"), { month: "short", day: "numeric" })}` : ""}</p></div>
+                            <ArrowUpRight size={16} className="mt-1 shrink-0 text-[#a56c75]" aria-hidden="true" />
                         </li>
                     ))}
                 </ul>
@@ -165,7 +164,7 @@ function NoticeList({ module, search }) {
                         const level = String(getValue(notice, "priority") || "normal").toLowerCase();
                         const urgent = level === "urgent";
                         const important = level === "important";
-                        return <li key={notice.id} className={`rounded-2xl border bg-white p-4 ${urgent ? "border-red-200" : important ? "border-amber-200" : "border-[#e9e9e5]"}`}><div className="flex flex-wrap items-center justify-between gap-2"><span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide ${urgent ? "text-red-800" : important ? "text-amber-800" : "text-[#747d83]"}`}>{urgent || important ? <Bell size={13} aria-hidden="true" /> : <FileText size={13} aria-hidden="true" />}{getValue(notice, "priority") || "Campus notice"}</span><time className="text-[10px] text-[#92999e]">{readableDate(getValue(notice, "published_date", "publishedDate", "created_at"), { month: "short", day: "numeric" })}</time></div><h3 className="mt-2 text-sm font-semibold text-[#26313a]"><Link href={notice.id ? `/notices/${notice.id}` : "/notices"} className="rounded-sm hover:text-[#762c3a] hover:underline">{notice.title || "Campus announcement"}</Link></h3><p className="mt-1 text-xs leading-relaxed text-[#77818a]">{getValue(notice, "description") || "Open this notice for more information."}</p></li>;
+                        return <li key={notice.id} className={`rounded-2xl border bg-white p-4 ${urgent ? "border-red-200" : important ? "border-amber-200" : "border-[#e9e9e5]"}`}><div className="flex flex-wrap items-center justify-between gap-2"><span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide ${urgent ? "text-red-800" : important ? "text-amber-800" : "text-[#747d83]"}`}>{urgent || important ? <Bell size={13} aria-hidden="true" /> : <FileText size={13} aria-hidden="true" />}{getValue(notice, "priority") || "Campus notice"}</span><time className="text-[10px] text-[#92999e]">{readableDate(getValue(notice, "published_date", "publishedDate", "created_at"), { month: "short", day: "numeric" })}</time></div><h3 className="mt-2 text-sm font-semibold text-[#26313a]"><Link href={notice.id ? `/notices/${notice.id}` : "/notices"} className="rounded-sm hover:text-[#c8102e] hover:underline">{notice.title || "Campus announcement"}</Link></h3><p className="mt-1 text-xs leading-relaxed text-[#77818a]">{getValue(notice, "description") || "Open this notice for more information."}</p></li>;
                     })}
                 </ul>
             )}
@@ -174,7 +173,7 @@ function NoticeList({ module, search }) {
 }
 
 function ServiceCard({ id, title, detail, icon: Icon, sourceStatus = "not-connected", statusLabel }) {
-    return <article id={id} className="scroll-mt-24 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#ded4d2]"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-[#f6f4ef] text-[#762c3a]"><Icon size={17} aria-hidden="true" /></span><h3 className="text-xs font-semibold text-[#303a43]">{title}</h3></div><p className="mt-3 text-[11px] leading-relaxed text-[#79838c]">{detail}</p><span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-medium text-[#8a9297]"><span className={`size-1.5 rounded-full ${sourceStatus === "available" ? "bg-emerald-500" : "bg-[#b7b9b4]"}`} />{statusLabel || (sourceStatus === "available" ? "Available" : "Not connected yet")}</span></article>;
+    return <article id={id} className="scroll-mt-24 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#ded4d2]"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-[#f6f4ef] text-[#c8102e]"><Icon size={17} aria-hidden="true" /></span><h3 className="text-xs font-semibold text-[#303a43]">{title}</h3></div><p className="mt-3 text-[11px] leading-relaxed text-[#79838c]">{detail}</p><span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-medium text-[#8a9297]"><span className={`size-1.5 rounded-full ${sourceStatus === "available" ? "bg-emerald-500" : "bg-[#b7b9b4]"}`} />{statusLabel || (sourceStatus === "available" ? "Available" : "Not connected yet")}</span></article>;
 }
 
 export function CampusDashboard({ profile, events, resources, notices }) {
@@ -184,37 +183,36 @@ export function CampusDashboard({ profile, events, resources, notices }) {
     const moduleCount = [events, resources, notices].filter((module) => module.status === "ready").length;
     return (
         <main id="overview" className="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-7 sm:pt-8 xl:px-10">
-                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-[#8b6970]">{todayLabel} · City University</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-[#202a35] sm:text-3xl">Campus Pulse</h1></div><div className="inline-flex items-center gap-2 rounded-full border border-[#e8e6e1] bg-white px-3 py-1.5 text-[10px] text-[#697681]"><span className={`size-1.5 rounded-full ${moduleCount === 3 ? "bg-emerald-500" : "bg-amber-500"}`} />{moduleCount === 3 ? "Campus updates connected" : `${moduleCount} of 3 update sources connected`}</div></div>
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-[#a13e4c]">{todayLabel} · City University</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-[#202a35] sm:text-3xl">Campus Pulse</h1></div><div className="inline-flex items-center gap-2 rounded-full border border-[#e8e6e1] bg-white px-3 py-1.5 text-[10px] text-[#697681]"><span className={`size-1.5 rounded-full ${moduleCount === 3 ? "bg-emerald-500" : "bg-amber-500"}`} />{moduleCount === 3 ? "Campus updates connected" : `${moduleCount} of 3 update sources connected`}</div></div>
 
-                    <section className="relative overflow-hidden rounded-3xl bg-[#762c3a] px-5 py-7 text-white sm:px-9 sm:py-9">
+                    <section className="relative overflow-hidden rounded-3xl bg-[#c8102e] px-5 py-7 text-white sm:px-9 sm:py-9">
                         <div aria-hidden="true" className="absolute -right-16 -top-24 size-72 rounded-full border border-white/10 sm:size-96" />
                         <div className="relative grid gap-7 lg:grid-cols-[1fr_minmax(260px,360px)] lg:items-end">
-                            <div><p className="mb-3 text-[10px] font-bold uppercase tracking-[.18em] text-white/70">Your City University home</p><h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Good to see you, {greetingName}.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/75">Your daily view of campus events, learning resources, and important updates.</p><a href="#events" className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 text-xs font-semibold text-[#762c3a] hover:bg-[#fbf8f6]">See what&apos;s happening <ChevronRight size={16} aria-hidden="true" /></a></div>
-                            <div className="rounded-2xl border border-white/15 bg-white/10 p-4"><p className="text-[10px] font-semibold uppercase tracking-[.14em] text-white/70">Quick campus search</p><form action="/search" className="mt-3 flex gap-2"><SearchInput value={search} onChange={setSearch} className="min-w-0 flex-1 border-white/70" /><button className="rounded-lg bg-white px-3 text-[11px] font-semibold text-[#762c3a]">Search all</button></form><p className="mt-2 text-[10px] leading-relaxed text-white/65">Search across events, clubs, resources, notices, FAQs, and Lost &amp; Found.</p></div>
+                            <div><p className="mb-3 text-[10px] font-bold uppercase tracking-[.18em] text-white/70">Your City University home</p><h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Good to see you, {greetingName}.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/75">Your daily view of campus events, learning resources, and important updates.</p><a href="#events" className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 text-xs font-semibold text-[#c8102e] hover:bg-[#fbf8f6]">See what&apos;s happening <ChevronRight size={16} aria-hidden="true" /></a></div>
+                            <div className="rounded-2xl border border-white/15 bg-white/10 p-4"><p className="text-[10px] font-semibold uppercase tracking-[.14em] text-white/70">Quick campus search</p><form action="/search" className="mt-3 flex gap-2"><SearchInput value={search} onChange={setSearch} className="min-w-0 flex-1 border-white/70" /><button className="rounded-lg bg-white px-3 text-[11px] font-semibold text-[#c8102e]">Search all</button></form><p className="mt-2 text-[10px] leading-relaxed text-white/65">Search across events, clubs, resources, notices, FAQs, and Lost &amp; Found.</p></div>
                         </div>
                     </section>
 
                     <section id="events" className="mt-9 scroll-mt-24">
-                        <SectionHeading eyebrow="Your day" title="Today's & upcoming events" action={<Link href="/events" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#762c3a]">View events <ChevronRight size={14} /></Link>} />
+                        <SectionHeading eyebrow="Your day" title="Today's & upcoming events" action={<Link href="/events" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#c8102e]">View events <ChevronRight size={14} /></Link>} />
                         <EventList module={events} search={search} />
                     </section>
 
                     <section className="mt-9 grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)]">
-                        <div id="notices" className="scroll-mt-24"><SectionHeading eyebrow="Stay informed" title="Important & urgent notices" action={<Link href="/notices" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#762c3a]">All notices <ChevronRight size={14} /></Link>} /><NoticeList module={notices} search={search} /></div>
-                        <div id="resources" className="scroll-mt-24"><SectionHeading eyebrow="Keep learning" title="Recently added resources" action={<a href="#resources" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#762c3a]">Resource Hub <ChevronRight size={14} /></a>} /><ResourceList module={resources} search={search} /></div>
+                        <div id="notices" className="scroll-mt-24"><SectionHeading eyebrow="Stay informed" title="Important & urgent notices" action={<Link href="/notices" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#c8102e]">All notices <ChevronRight size={14} /></Link>} /><NoticeList module={notices} search={search} /></div>
+                        <div id="resources" className="scroll-mt-24"><SectionHeading eyebrow="Keep learning" title="Recently added resources" action={<a href="#resources" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#c8102e]">Resource Hub <ChevronRight size={14} /></a>} /><ResourceList module={resources} search={search} /></div>
                     </section>
 
                     <section id="quick-access" className="mt-10 scroll-mt-24">
-                        <SectionHeading eyebrow="Your shortcuts" title="Quick access" />
+                        <SectionHeading eyebrow="Your shortcuts" title="Quick Access" />
                         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                            {quickLinks.map(({ title, detail, icon: Icon, href, source }) => { const available = source === "search" ? [events, resources, notices].some((module) => module.status === "ready") : ["helpdesk", "student-service"].includes(source) ? true : source ? ({ events, resources }[source]?.status === "ready") : false; return <a key={title} href={href} className="group flex min-h-24 items-start gap-3 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#d9c4c8] hover:bg-[#fffdfc]"><span className="rounded-xl bg-[#f7f3f0] p-2.5 text-[#762c3a]"><Icon size={18} aria-hidden="true" /></span><span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-2"><b className="text-xs text-[#303a43]">{title}</b>{!available && <small className="rounded-full bg-[#f3f1ed] px-2 py-0.5 text-[9px] text-[#7c858d]">Not connected</small>}</span><small className="mt-1 block text-[11px] leading-relaxed text-[#7c858d]">{detail}</small></span><ArrowUpRight size={15} className="mt-1 text-[#a2a6a4] transition-colors group-hover:text-[#762c3a]" aria-hidden="true" /></a>; })}
+                            {quickLinks.map(({ title, detail, icon: Icon, href, source }) => { const available = source === "search" ? [events, resources, notices].some((module) => module.status === "ready") : ["helpdesk", "student-service"].includes(source) ? true : source ? ({ events, resources }[source]?.status === "ready") : false; return <a key={title} href={href} className="group flex min-h-24 items-start gap-3 rounded-2xl border border-[#e9e9e5] bg-white p-4 transition-colors hover:border-[#e7c4c9] hover:bg-[#fffdfc]"><span className="rounded-xl bg-[#f7f3f0] p-2.5 text-[#c8102e]"><Icon size={18} aria-hidden="true" /></span><span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-2"><b className="text-xs text-[#303a43]">{title}</b>{!available && <small className="rounded-full bg-[#f3f1ed] px-2 py-0.5 text-[9px] text-[#7c858d]">Not connected</small>}</span><small className="mt-1 block text-[11px] leading-relaxed text-[#7c858d]">{detail}</small></span><ArrowUpRight size={15} className="mt-1 text-[#a2a6a4] transition-colors group-hover:text-[#c8102e]" aria-hidden="true" /></a>; })}
                         </div>
                     </section>
 
                     <section id="campus-services" className="mt-10 scroll-mt-24">
-                        <SectionHeading eyebrow="Campus life" title="Support & campus services" />
+                        <SectionHeading eyebrow="Campus life" title="Support Services" />
                         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                            <ServiceCard id="campus-ai" title="Smart Helpdesk · CampusAI" detail="Find City University guidance on exams, registration, campus information, and transport." icon={Sparkles} sourceStatus="available" statusLabel="Helpdesk available" />
                             <ServiceCard id="lost-found" title="Lost & Found" detail="Create a post, search items, and mark your post resolved." icon={Search} sourceStatus="available" statusLabel="Student service available" />
                             <ServiceCard id="complaint-box" title="Complaint Box" detail="Submit a complaint privately and track its status." icon={LifeBuoy} sourceStatus="available" statusLabel="Private student support" />
                             <ServiceCard id="campus-info" title="Campus information" detail="City University · Dhaka, Bangladesh. Your profile details are managed by your campus account." icon={MapPin} sourceStatus="available" statusLabel="City University" />

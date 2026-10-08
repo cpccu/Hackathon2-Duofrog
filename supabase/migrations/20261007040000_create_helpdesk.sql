@@ -18,7 +18,7 @@ create table if not exists public.helpdesk_articles (
   search_vector tsvector generated always as (
     setweight(to_tsvector('simple'::regconfig, coalesce(title, '')), 'A') ||
     setweight(to_tsvector('simple'::regconfig, coalesce(summary, '')), 'B') ||
-    setweight(to_tsvector('simple'::regconfig, coalesce(content, '') || ' ' || array_to_string(keywords, ' ')), 'C')
+    setweight(to_tsvector('simple'::regconfig, coalesce(content, '')), 'C')
   ) stored
 );
 
@@ -44,7 +44,7 @@ create table if not exists public.bus_routes (
   search_vector tsvector generated always as (
     setweight(to_tsvector('simple'::regconfig, coalesce(route_name, '')), 'A') ||
     setweight(to_tsvector('simple'::regconfig, coalesce(origin, '') || ' ' || coalesce(destination, '')), 'B') ||
-    setweight(to_tsvector('simple'::regconfig, coalesce(array_to_string(stops, ' '), '') || ' ' || coalesce(service_information, '') || ' ' || coalesce(contact_information, '')), 'C')
+    setweight(to_tsvector('simple'::regconfig, coalesce(service_information, '') || ' ' || coalesce(contact_information, '')), 'C')
   ) stored
 );
 
@@ -136,58 +136,6 @@ $$;
 revoke all on function public.search_helpdesk_articles(text, text, integer) from public, anon;
 grant execute on function public.search_helpdesk_articles(text, text, integer) to authenticated;
 
-create or replace function public.search_helpdesk_context(search_text text, result_limit integer default 6)
-returns table (
-  source_id text, source_type text, title text, context_text text,
-  source_label text, source_url text, relevance real
-)
-language sql stable
-security invoker
-set search_path = ''
-as $$
-  with input as (
-    select trim(coalesce(search_text, '')) as term,
-      plainto_tsquery('simple'::regconfig, trim(coalesce(search_text, ''))) as query
-  ), matches as (
-    select a.id::text as source_id, 'article'::text as source_type, a.title,
-      a.summary || E'\n' || a.content as context_text, a.source_label, a.source_url,
-      ts_rank(a.search_vector, input.query) as relevance
-    from public.helpdesk_articles a cross join input
-    where a.is_published and input.term <> '' and (
-      a.search_vector @@ input.query or exists (
-        select 1 from unnest(regexp_split_to_array(lower(input.term), '[^a-z0-9]+')) as term(word)
-        where char_length(term.word) >= 2 and a.title || ' ' || a.summary || ' ' || a.content || ' ' || array_to_string(a.keywords, ' ')
-          ilike '%' || term.word || '%'
-      )
-    )
-    union all
-    select b.id::text, 'bus_route'::text, b.route_name,
-      concat_ws(E'\n', 'Origin: ' || nullif(b.origin, ''), 'Destination: ' || nullif(b.destination, ''),
-        case when cardinality(b.stops) > 0 then 'Stops: ' || array_to_string(b.stops, ', ') end,
-        case when b.departure_time is not null then 'Departure: ' || to_char(b.departure_time, 'HH12:MI AM') end,
-        case when b.return_time is not null then 'Return: ' || to_char(b.return_time, 'HH12:MI AM') end,
-        case when cardinality(b.operating_days) > 0 then 'Days: ' || array_to_string(b.operating_days, ', ') end,
-        'Fare: ' || nullif(b.fare_information, ''), b.service_information, b.contact_information) as context_text,
-      b.source_label, b.source_url, ts_rank(b.search_vector, input.query) as relevance
-    from public.bus_routes b cross join input
-    where b.is_published and input.term <> '' and (
-      b.search_vector @@ input.query or exists (
-        select 1 from unnest(regexp_split_to_array(lower(input.term), '[^a-z0-9]+')) as term(word)
-        where char_length(term.word) >= 2 and b.route_name || ' ' || b.origin || ' ' || b.destination || ' ' ||
-          array_to_string(b.stops, ' ') || ' ' || b.service_information || ' ' || b.contact_information
-          ilike '%' || term.word || '%'
-      )
-    )
-  )
-  select matches.source_id, matches.source_type, matches.title, matches.context_text,
-    matches.source_label, matches.source_url, matches.relevance
-  from matches
-  order by matches.relevance desc, matches.title
-  limit least(greatest(coalesce(result_limit, 6), 1), 12);
-$$;
-revoke all on function public.search_helpdesk_context(text, integer) from public, anon;
-grant execute on function public.search_helpdesk_context(text, integer) to authenticated;
-
 -- Seed only when these tables are empty. Facts are paraphrased from City University's published pages.
 insert into public.helpdesk_articles (
   slug, title, summary, content, category, keywords, source_label, source_url, is_published
@@ -218,3 +166,5 @@ select 'transport-office-info', 'Official transport service information',
   'Transport Office: 09643-234234; +8801322917670; +8801322917671. For queries: +8801322917672; +8801322917673.',
   'City University Transport Facilities', 'https://www.cityuniversity.ac.bd/transportfacilities', true
 where not exists (select 1 from public.bus_routes);
+
+notify pgrst, 'reload schema';
