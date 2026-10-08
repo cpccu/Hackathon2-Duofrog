@@ -7,6 +7,15 @@ import { ArrowLeft, LoaderCircle, Save } from "lucide-react";
 import { EVENT_TYPES } from "@/lib/events/constants";
 import { createClient } from "@/lib/supabase/client";
 
+function describeSaveError(error) {
+    if (error?.code === "42501") return "Supabase denied this change. Confirm your account has the admin role, the selected club is available, and the event policies from the Club & Event Engine migration are installed.";
+    if (error?.code === "23503") return "The selected club or your profile is missing from Supabase. Refresh the page and choose an existing club.";
+    if (error?.code === "23514") return "One or more values do not meet the event rules. Check the title, event type, venue, date, and time.";
+    if (error?.code === "23505") return "This event conflicts with an existing record. Refresh the page and try a different title or date.";
+    if (error?.message) return error.message;
+    return "The event could not be saved. Check your connection and try again.";
+}
+
 export function EventEditorForm({ clubs, event = null }) {
     const router = useRouter();
     const [busy, setBusy] = useState(false);
@@ -71,11 +80,11 @@ export function EventEditorForm({ clubs, event = null }) {
                 ? await supabase.from("events").update(payload).eq("id", event.id).select("id").maybeSingle()
                 : await supabase.from("events").insert({ ...payload, created_by: authData.user.id }).select("id").single();
             if (result.error) throw result.error;
-            if (!result.data?.id) throw new Error("Your account cannot manage this event.");
+            if (!result.data?.id) throw new Error("Supabase did not return a saved event. Refresh the page and confirm your account can manage the selected club.");
             router.replace(`/manage/events?success=${event ? "updated" : "created"}`);
             router.refresh();
         } catch (caught) {
-            setError(caught instanceof Error ? caught.message : "The event could not be saved.");
+            setError(describeSaveError(caught));
         } finally {
             setBusy(false);
             setStep("");

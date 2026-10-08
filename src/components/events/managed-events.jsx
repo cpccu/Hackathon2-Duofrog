@@ -18,8 +18,9 @@ export function ManagedEvents({ events, error, success }) {
         setDeleting(event.id);
         setFailure("");
         setNotice("");
-        const { error: deleteError } = await createClient().from("events").delete().eq("id", event.id);
+        const { data, error: deleteError } = await createClient().from("events").delete().eq("id", event.id).select("id").maybeSingle();
         if (deleteError) setFailure(deleteError.message || "The event could not be deleted.");
+        else if (!data) setFailure("No event was deleted. Refresh the page and confirm your club or admin permissions.");
         else {
             setNotice("Event deleted. Its registrations were removed.");
             router.refresh();

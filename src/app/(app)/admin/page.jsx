@@ -21,6 +21,6 @@ export default async function AdminPage(){
     auth.supabase.from("event_registrations").select("id,event_id,status,checked_in").limit(5000),
   ]);
   const [stats,events,clubs,resources,notices,articles,routes,items,complaints,users,registrations]=queries;
-  const errors={Overview:stats.error,Events:events.error,Clubs:clubs.error,Resources:resources.error,Notices:notices.error,"FAQs & buses":articles.error||routes.error,"Lost & Found":items.error,Complaints:complaints.error,Users:users.error};
+  const errors={Overview:stats.error,Events:events.error||registrations.error,Clubs:clubs.error,Resources:resources.error,Notices:notices.error,"FAQs & buses":articles.error||routes.error,"Lost & Found":items.error,Complaints:complaints.error,Users:users.error};
   return <AdminDashboard profile={auth.profile} stats={stats.data?.[0]||emptyStats} events={events.data||[]} clubs={clubs.data||[]} resources={resources.data||[]} notices={notices.data||[]} articles={articles.data||[]} routes={routes.data||[]} items={items.data||[]} complaints={complaints.data||[]} users={users.data||[]} registrations={registrations.data||[]} errors={Object.fromEntries(Object.entries(errors).map(([key,value])=>[key,Boolean(value)]))}/>;
 }

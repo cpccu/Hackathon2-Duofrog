@@ -122,8 +122,9 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
             }
 
             if (!createdNotice) {
-                const { error: updateError } = await supabase.from("notices").update(values).eq("id", noticeId);
+                const { data, error: updateError } = await supabase.from("notices").update(values).eq("id", noticeId).select("id").maybeSingle();
                 if (updateError) throw updateError;
+                if (!data?.id) throw new Error("No notice was updated. Refresh the page and confirm your admin permissions.");
             }
 
             let cleanupWarning = "";
@@ -165,12 +166,12 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
         setError("");
         try {
             const supabase = createClient();
-            const { error: storageError } = await supabase.storage.from(NOTICE_ATTACHMENT_BUCKET).remove([attachment.storage_path]);
-            if (storageError) throw storageError;
-            const { error: deleteError } = await supabase.from("notice_attachments").delete().eq("id", attachment.id);
+            const { data, error: deleteError } = await supabase.from("notice_attachments").delete().eq("id", attachment.id).select("id").maybeSingle();
             if (deleteError) throw deleteError;
+            if (!data?.id) throw new Error("No attachment was removed. Refresh the page and confirm your admin permissions.");
+            const { error: storageError } = await supabase.storage.from(NOTICE_ATTACHMENT_BUCKET).remove([attachment.storage_path]);
             setEditing((current) => current ? { ...current, attachments: current.attachments.filter((item) => item.id !== attachment.id) } : current);
-            setMessage("Attachment removed.");
+            setMessage(storageError ? "Attachment removed from the notice, but its stored file could not be deleted." : "Attachment removed.");
             router.refresh();
         } catch (caught) {
             setError(caught.message || "Attachment could not be removed.");
@@ -187,13 +188,13 @@ export function NoticeAdmin({ notices, attachmentsReady }) {
         try {
             const supabase = createClient();
             const paths = (notice.attachments || []).map((attachment) => attachment.storage_path);
-            if (paths.length) {
-                const { error: storageError } = await supabase.storage.from(NOTICE_ATTACHMENT_BUCKET).remove(paths);
-                if (storageError) throw storageError;
-            }
-            const { error: deleteError } = await supabase.from("notices").delete().eq("id", notice.id);
+            const { data, error: deleteError } = await supabase.from("notices").delete().eq("id", notice.id).select("id").maybeSingle();
             if (deleteError) throw deleteError;
-            setMessage("Notice deleted.");
+            if (!data?.id) throw new Error("No notice was deleted. Refresh the page and confirm your admin permissions.");
+            const { error: storageError } = paths.length
+                ? await supabase.storage.from(NOTICE_ATTACHMENT_BUCKET).remove(paths)
+                : { error: null };
+            setMessage(storageError ? "Notice deleted, but its stored attachment files could not be removed." : "Notice deleted.");
             router.refresh();
         } catch (caught) {
             setError(caught.message || "Notice could not be deleted.");
