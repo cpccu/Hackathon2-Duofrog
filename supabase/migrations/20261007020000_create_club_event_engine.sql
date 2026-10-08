@@ -326,6 +326,7 @@ $$;
 revoke all on function public.get_managed_events() from public, anon;
 grant execute on function public.get_managed_events() to authenticated;
 
+drop function if exists public.get_event_attendees(uuid);
 create or replace function public.get_event_attendees(target_event uuid)
 returns table (
   registration_id uuid, user_id uuid, full_name text, student_id text, department text,
