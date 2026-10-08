@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
     ArrowUpRight,
     Bell,
@@ -15,26 +14,10 @@ import {
     GraduationCap,
     LifeBuoy,
     MapPin,
-    Menu,
-    UsersRound,
     Search,
-    ShieldCheck,
     Sparkles,
-    X,
+    UsersRound,
 } from "lucide-react";
-import { SignOutButton } from "@/components/auth/sign-out-button";
-
-const navigation = [
-    ["Campus Pulse", "#overview", Sparkles],
-    ["Events", "/events", CalendarDays],
-    ["My Events", "/my-events", CheckCircle2],
-    ["Clubs", "/clubs", UsersRound],
-    ["Resource Hub", "/resources", BookOpen],
-    ["Helpdesk · CampusAI", "/helpdesk", CircleHelp],
-    ["Search campus", "/search", Search],
-    ["Notices", "/notices", Bell],
-    ["Campus services", "#campus-services", LifeBuoy],
-];
 
 const quickLinks = [
     { title: "Resource Hub", detail: "Course notes and learning materials", icon: BookOpen, href: "#resources", source: "resources" },
@@ -120,39 +103,6 @@ function SearchInput({ value, onChange, className = "" }) {
     );
 }
 
-function Brand({ compact = false }) {
-    return (
-        <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-xl bg-[#762c3a] font-serif text-xl text-white">C</span>
-            <span><b className="block text-sm text-[#202a35]">Campus<span className="text-[#762c3a]">OS</span></b>{!compact && <small className="text-[10px] uppercase tracking-widest text-[#78828b]">City University</small>}</span>
-        </div>
-    );
-}
-
-function Sidebar({ mobile = false, close }) {
-    const pathname = usePathname();
-    return (
-        <aside className={mobile ? "absolute inset-y-0 left-0 w-[min(86vw,310px)] overflow-y-auto bg-white p-5 shadow-2xl" : "sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-[#ebe9e4] bg-white p-5 lg:flex lg:flex-col"}>
-            <div className="flex items-center justify-between"><Brand />{mobile && <button type="button" aria-label="Close navigation" onClick={close} className="rounded-lg p-2 text-[#66727c] hover:bg-[#f6f5f2]"><X size={20} /></button>}</div>
-            <p className="mb-3 mt-10 px-3 text-[10px] font-bold uppercase tracking-widest text-[#92999e]">Your workspace</p>
-            <nav aria-label="Main navigation" className="space-y-1">
-                {navigation.map(([label, href, Icon]) => {
-                    const active = href.startsWith("#") ? pathname === "/dashboard" : pathname === href || pathname.startsWith(`${href}/`);
-                    return <Link key={label} href={href} onClick={close} aria-current={active ? "page" : undefined} className={active ? "flex items-center gap-3 rounded-xl bg-[#f6edef] px-3 py-3 text-sm font-medium text-[#762c3a]" : "flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-[#66727c] transition-colors hover:bg-[#f7f7f5] hover:text-[#303a43]"}>
-                        <Icon size={17} aria-hidden="true" />{label}
-                    </Link>
-                })}
-            </nav>
-            <div className="mt-auto rounded-2xl bg-[#f7f5f1] p-4">
-                <ShieldCheck className="mb-3 size-5 text-[#762c3a]" aria-hidden="true" />
-                <b className="text-xs text-[#303a43]">A campus, connected.</b>
-                <p className="mt-1 text-[11px] leading-relaxed text-[#79838c]">Your City University updates, together in one place.</p>
-                <small className="mt-4 block text-[#92999e]">City University · Dhaka</small>
-            </div>
-        </aside>
-    );
-}
-
 function SectionHeading({ eyebrow, title, action }) {
     return (
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
@@ -228,39 +178,12 @@ function ServiceCard({ id, title, detail, icon: Icon, sourceStatus = "not-connec
 }
 
 export function CampusDashboard({ profile, events, resources, notices }) {
-    const [menuOpen, setMenuOpen] = useState(false);
     const [search, setSearch] = useState("");
     const greetingName = fullName(profile).trim().split(/\s+/)[0];
     const todayLabel = useMemo(() => new Intl.DateTimeFormat("en", { weekday: "long", month: "long", day: "numeric", timeZone: "Asia/Dhaka" }).format(new Date()), []);
     const moduleCount = [events, resources, notices].filter((module) => module.status === "ready").length;
-    useEffect(() => {
-        if (!menuOpen) return undefined;
-        const previousOverflow = document.body.style.overflow;
-        const closeOnEscape = (event) => { if (event.key === "Escape") setMenuOpen(false); };
-        document.body.style.overflow = "hidden";
-        window.addEventListener("keydown", closeOnEscape);
-        return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", closeOnEscape); };
-    }, [menuOpen]);
-
     return (
-        <div className="min-h-screen lg:flex">
-            <Sidebar />
-            {menuOpen && <div role="dialog" aria-modal="true" aria-label="CampusOS navigation" className="fixed inset-0 z-50 bg-[#17212a]/35 lg:hidden"><button type="button" className="absolute inset-0 cursor-default" aria-label="Close navigation" onClick={() => setMenuOpen(false)} /><Sidebar mobile close={() => setMenuOpen(false)} /></div>}
-            <div className="min-w-0 flex-1">
-                <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-[#e8e8e4] bg-[#f6f5f2]/95 px-4 backdrop-blur sm:px-7">
-                    <div className="flex min-w-0 items-center gap-3">
-                        <button type="button" className="rounded-lg p-2 text-[#4b5862] hover:bg-white lg:hidden" aria-label="Open navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Menu size={20} /></button>
-                        <span className="lg:hidden"><Brand compact /></span>
-                        <span className="hidden text-xs text-[#697681] lg:block">City University <span className="mx-1 text-[#c1c0bb]">/</span> Student workspace</span>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-                        <div className="hidden text-right sm:block"><b className="block max-w-44 truncate text-xs text-[#37414a]">{fullName(profile)}</b><small className="text-[10px] capitalize text-[#79838c]">{profile.role}{profile.student_id ? ` · ${profile.student_id}` : ""}</small></div>
-                        {profile.role === "admin" && <a href="/admin" className="rounded-lg px-2 py-2 text-[11px] text-[#762c3a]">Admin</a>}
-                        <SignOutButton />
-                    </div>
-                </header>
-
-                <main id="overview" className="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-7 sm:pt-8 xl:px-10">
+        <main id="overview" className="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-7 sm:pt-8 xl:px-10">
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-[#8b6970]">{todayLabel} · City University</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-[#202a35] sm:text-3xl">Campus Pulse</h1></div><div className="inline-flex items-center gap-2 rounded-full border border-[#e8e6e1] bg-white px-3 py-1.5 text-[10px] text-[#697681]"><span className={`size-1.5 rounded-full ${moduleCount === 3 ? "bg-emerald-500" : "bg-amber-500"}`} />{moduleCount === 3 ? "Campus updates connected" : `${moduleCount} of 3 update sources connected`}</div></div>
 
                     <section className="relative overflow-hidden rounded-3xl bg-[#762c3a] px-5 py-7 text-white sm:px-9 sm:py-9">
@@ -301,8 +224,6 @@ export function CampusDashboard({ profile, events, resources, notices }) {
                     </section>
 
                     <footer className="mt-10 flex flex-wrap justify-between gap-2 border-t border-[#e6e4df] pt-5 text-[10px] text-[#8a9297]"><span>CampusOS · One Campus. Everything You Need.</span><span className="inline-flex items-center gap-1"><MapPin size={12} aria-hidden="true" />City University, Dhaka, Bangladesh</span></footer>
-                </main>
-            </div>
-        </div>
+        </main>
     );
 }
