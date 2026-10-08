@@ -20,7 +20,14 @@ The app also includes searchable official notices with private file attachments 
 
 ## A day at City University
 
-A first-year student can open CampusOS to find this week's events instead of checking separate club groups. Before an exam, they can search the Resource Hub for a course's notes or past papers rather than asking across several chats. If a class or campus service update is posted as an official notice, it is searchable alongside helpdesk guidance. A student who loses an ID card can post its location and date, then check the same board for a matching found item. These flows give new and returning students one practical starting point for campus information.
+A first-year student can use CampusOS to find verified central clubs published by the Directorate of Students’ Welfare, then use one searchable workspace for events, course materials, university guidance, and student support rather than checking separate social groups, chat threads, forms, and notice boards. Before an exam, they can search the Resource Hub for course notes or past papers. If a class or campus service update is added as a notice, it is searchable alongside helpdesk guidance; the Notices page also links directly to City University’s live notice board so students can verify the latest deadlines. A student who loses an ID card can post its location and date, then check the same board for a match.
+
+## City University sources and data freshness
+
+- The Club Directory shows the six central clubs named by the [Directorate of Students’ Welfare](https://www.cityuniversity.ac.bd/dsw). This verified list links to the university page for committee details.
+- The Notices page links to the [official university notice board](https://www.cityuniversity.ac.bd/all-notice), where current academic calendars and announcements are published. CampusOS does not claim its curated notice list is a complete or real-time mirror.
+- Helpdesk answers link to their official university sources. For transport, the published guidance avoids inventing route stops and times that City University does not provide on its source page.
+- Club profiles and event listings used to demonstrate CampusOS search, RSVP, and check-in workflows are sample data, not confirmed university organizations or scheduled events. The interface labels those records accordingly; students should verify real event dates through official university channels.
 
 ## Technology
 
