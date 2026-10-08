@@ -1,55 +1,95 @@
 # CampusOS
 
-**One Campus. Everything You Need.**
+**One campus. Everything students need.**
 
-Responsive student workspace for City University in Dhaka, built with Next.js App Router, JavaScript, Tailwind CSS, Supabase Auth, and Postgres.
+CampusOS is a student workspace for City University in Dhaka. It brings campus events, study resources, university guidance, official notices, and student support into one searchable, authenticated application instead of scattering them across social groups, chat threads, forms, and notice boards.
 
-## Local setup
+**Live app:** [hackathon2-duofrog-ochre.vercel.app](https://hackathon2-duofrog-ochre.vercel.app)<br />
+**Source:** [cpccu/Hackathon2-Duofrog](https://github.com/cpccu/Hackathon2-Duofrog)
 
-1. Install dependencies with npm install.
-2. Copy .env.example to .env.local and add the Supabase project URL and publishable key.
-3. Apply supabase/migrations/20261007000000_create_profiles.sql in the Supabase SQL editor.
-4. Apply supabase/migrations/20261007010000_create_resource_hub.sql to create the private resource bucket, resource table, search RPCs, and RLS policies.
-5. Apply supabase/migrations/20261007020000_create_club_event_engine.sql to create clubs, events, registrations, indexes, organizer RPCs, and RLS policies. It inserts four original demo clubs and five events only when the club directory is empty; they are real Supabase rows, not client-side fixtures.
-5a. Apply supabase/migrations/20261008090000_allow_club_deletion.sql to allow club deletion; its events and their RSVP/check-in records are deleted with the club.
-6. Apply supabase/migrations/20261007030000_secure_event_qr_checkin.sql to add unique private RSVP tokens, student QR retrieval, organizer-validated check-in, and attendance fields. Apply it after the Club & Event Engine migration.
-7. Apply supabase/migrations/20261007040000_create_helpdesk.sql to create published helpdesk articles, transport information, search functions, and RLS policies. The migration seeds a small set of source-linked City University guidance records; transport timings remain unspecified where the official page does not publish them.
-7a. Apply supabase/migrations/20261008100000_drop_helpdesk_context_search.sql to remove the unused legacy Helpdesk context search function.
-8. Apply supabase/migrations/20261007050000_create_notices_lost_found_complaints.sql for official notices, Lost & Found posts/photos, private complaints, and RLS policies.
-9. Apply supabase/migrations/20261007060000_admin_dashboard.sql for admin-only statistics, admin profile visibility, and safe user-role updates.
-10. Apply supabase/migrations/20261008080000_notice_attachments.sql to create private notice attachments storage and its access policies.
-11. In Supabase Auth, configure the site URL and email confirmation/redirect settings for your local and deployed app. Promote administrators only through a trusted database operator session; assign a club's `manager_id` to an existing profile from the SQL editor to authorize that organizer.
-12. Run npm run dev.
+## What students can do
 
-The legacy NEXT_PUBLIC_SUPABASE_ANON_KEY can be used if the project does not have a publishable key. Never add a Supabase secret/service-role key to this app or any NEXT_PUBLIC variable.
+CampusOS includes four end-to-end campus modules:
 
-## Authentication
+- **Club & Event Engine:** Browse and search events from campus clubs, view event details, RSVP, retrieve a private registration QR code, and let organizers check attendees in.
+- **Resource Hub:** Browse and search course and department materials. Administrators can upload supported files to private Supabase Storage; signed-in students can access resources through the app.
+- **Smart Helpdesk:** Search source-linked university guidance and published shuttle route information from one place. Timings are shown only when the university publishes them.
+- **Lost & Found and Complaint Box:** Post and search lost or found items, attach photos, mark a post resolved, and submit a private complaint whose status can be followed in the app.
 
-Users can sign up, confirm email when required by project settings, sign in, keep sessions in secure Supabase SSR cookies, and sign out. The dashboard and admin route verify claims on the server. User profiles are created by a database trigger with the student role; client signup metadata cannot grant admin access. Promote administrators only from a trusted database operator session, for example by updating the role column in the Supabase SQL editor after verifying the user's profile ID. RLS and column grants prevent users from reading other profiles or modifying their role.
+The app also includes searchable official notices with private file attachments and an administrator area for campus content and user-role management.
 
-## Scripts
+## A day at City University
 
-- npm run dev - development server
-- npm run build - production build
-- npm run start - serve production build
-- npm run lint - ESLint
+A first-year student can open CampusOS to find this week's events instead of checking separate club groups. Before an exam, they can search the Resource Hub for a course's notes or past papers rather than asking across several chats. If a class or campus service update is posted as an official notice, it is searchable alongside helpdesk guidance. A student who loses an ID card can post its location and date, then check the same board for a matching found item. These flows give new and returning students one practical starting point for campus information.
 
-## Structure
+## Technology
 
-- src/app - App Router routes, layouts, and global styles
-- src/components/auth - sign-up/sign-in forms and sign-out control
-- src/components/dashboard - campus workspace
-- src/components/helpdesk - database-backed campus helpdesk information
-- src/components/notices, src/components/lost-found, and src/components/complaints - campus notices and student support flows
-- src/components/admin - database-backed administrator overview and management tools
-- src/components/events and src/components/clubs - event, RSVP, organizer, and club UI
-- src/components/events/event-qr-code.jsx and event-checkin-scanner.jsx - private registration QR display and camera/manual scanner
-- src/components/ui - reusable UI components
-- src/lib/auth - verified server-side route guards
-- src/lib/supabase - cookie clients, session refresh, and database access
-- supabase/migrations - profiles, Resource Hub, clubs/events, Helpdesk knowledge, notices, Lost & Found, complaints, triggers, grants, and RLS policies
+- Next.js App Router 16 and React 19
+- JavaScript and Tailwind CSS 4
+- Supabase Auth, Postgres, Row Level Security, and private Storage
+- `@supabase/ssr` for cookie-based server and browser clients
+- Vercel for hosting and GitHub integration for source control and deployments
 
-Event QR tokens are generated by Postgres, are not exposed through registration table reads, and are returned only to the owning student. Organizer check-in is validated by a security-definer RPC against the signed-in organizer, selected event, active registration, and event time window. Camera access requires HTTPS (localhost is supported); manual token entry uses the same validation.
-- src/lib/seedData.js and src/lib/store.js - preserved demo records/store, not used for authentication or live dashboard data
+## Run locally
 
-Database tests and live signup/sign-in require a configured Supabase project. The app does not create mock accounts or sessions.
+Requirements: Node.js 24.x and npm.
+
+1. Clone the repository and install dependencies:
+
+   ```bash
+   git clone https://github.com/cpccu/Hackathon2-Duofrog.git
+   cd Hackathon2-Duofrog
+   npm install
+   ```
+
+2. Copy `.env.example` to `.env.local` and set the public Supabase project URL and publishable key:
+
+   ```dotenv
+   NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
+   ```
+
+   Legacy projects may use `NEXT_PUBLIC_SUPABASE_ANON_KEY` instead. Never put a Supabase secret or service-role key in a browser variable or commit it to Git.
+
+3. Apply the SQL files in `supabase/migrations/` to your Supabase project in timestamp order. For a fresh project, use the Supabase SQL Editor and stop if a migration reports an error before proceeding. The migrations create profiles, resources, clubs and events, event registration and QR check-in, the helpdesk, notices, Lost & Found, complaints, and administrator functions and policies.
+4. In Supabase Auth, set the Site URL to the deployed app URL. Add the local and production callback URLs ending in `/auth/callback` to the allowed redirect URLs. Configure email confirmation to match the sign-up flow you want to demo.
+5. Start the app:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000). Create an account through the sign-up page; the repository does not include shared demo credentials.
+
+## Environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes | Browser-safe Supabase publishable key |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Alternative | Legacy browser-safe key for older Supabase projects |
+
+Set the same public URL and key in Vercel's Development, Preview, and Production environments. These values are intended for client use; database access is protected by Supabase Row Level Security. Keep secret keys out of the repository and client bundle.
+
+## Roles and content setup
+
+New sign-ups receive the student role from a database trigger. The signup form cannot grant administrator access. Promote an administrator only through a trusted Supabase database operator session after verifying the profile ID. To enable club event management, assign a club's `manager_id` to an existing profile through a trusted operator session. Uploaded resources and official notice attachments are managed by administrators; Lost & Found posts are available to authenticated students.
+
+The Club & Event Engine migration adds starter club and event records only when the club directory is empty. Helpdesk guidance is seeded with source links. There are no shared demo accounts; judges can create their own account on the live app.
+
+## Commands
+
+```bash
+npm run dev     # local development
+npm run lint    # lint source files
+npm run build   # production build
+npm run start   # serve a production build
+```
+
+## Hackathon submission checklist
+
+- **Live app:** [https://hackathon2-duofrog-ochre.vercel.app](https://hackathon2-duofrog-ochre.vercel.app)
+- **CPCCU repository:** [https://github.com/cpccu/Hackathon2-Duofrog](https://github.com/cpccu/Hackathon2-Duofrog)
+- **Demo account:** Create an account on the live app; no shared password is published.
+- **Presentation and demo video:** Add the public viewer link here after uploading the video. The walkthrough should cover the problem, solution, live demo, features, and technical implementation.
+- **Submission form:** Include the team details, project description, modules, live link, repository, account access instructions, technology stack, video link, and this documentation link.
