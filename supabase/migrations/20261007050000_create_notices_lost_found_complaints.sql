@@ -58,6 +58,9 @@ create policy "Owners delete their own lost and found posts" on public.lost_foun
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('campus-lost-found', 'campus-lost-found', false, 5242880, array['image/jpeg','image/png','image/webp'])
 on conflict (id) do update set public = excluded.public, file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+-- The original policy name is intentionally dropped too. Earlier manual
+-- deployments created it before this migration was tracked by Supabase.
+drop policy if exists "Signed in users read Lost and Found photos" on storage.objects;
 drop policy if exists "Users read lost and found photos" on storage.objects;
 create policy "Signed in users read Lost and Found photos" on storage.objects for select to authenticated using (bucket_id = 'campus-lost-found');
 drop policy if exists "Users upload own lost and found photos" on storage.objects;
